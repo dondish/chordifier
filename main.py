@@ -32,46 +32,47 @@ def main():
     # winsound.PlaySound(wav2, flags=winsound.SND_FILENAME)
 
     # Play the C scale, starting from C3
-    # base = 130.8128
-    # x = 'TTSTTTS'  # Major scale
-    # for i in range(8):
-    #     wav = write_wave(tempfile.mktemp(), create_samples((sine_wave(0.25, base), sine_wave(0.25, base)), 44100), 44100)
-    #     winsound.PlaySound(wav, flags=winsound.SND_FILENAME)
-    #     if i == 7:
-    #         continue
-    #     if x[i] == 'T':
-    #         base = one_tone_up(base)
-    #     else:
-    #         base = one_semitone_up(base)
-    # for i in range(6, -2, -1):
-    #     wav = write_wave(tempfile.mktemp(), create_samples((sine_wave(0.25, base), sine_wave(0.25, base)), 44100),
-    #                      44100)
-    #     winsound.PlaySound(wav, flags=winsound.SND_FILENAME)
-    #     if i == -1:
-    #         continue
-    #     if x[i] == 'T':
-    #         base = one_tone_down(base)
-    #     else:
-    #         base = one_semitone_down(base)
+    base = PianoNotes.C3.value
+    x = 'TTSTTTS'  # Major scale
+    for i in range(8):
+        wav = write_wave(tempfile.mktemp(),
+                         create_samples((triangle_wave(0.125, base), triangle_wave(0.125, base)), 44100), 44100)
+        winsound.PlaySound(wav, flags=winsound.SND_FILENAME)
+        if i == 7:
+            continue
+        if x[i] == 'T':
+            base = one_tone_up(base)
+        else:
+            base = one_semitone_up(base)
+    for i in range(6, -2, -1):
+        wav = write_wave(tempfile.mktemp(), create_samples((sine_wave(0.25, base), sine_wave(0.25, base)), 44100),
+                         44100)
+        winsound.PlaySound(wav, flags=winsound.SND_FILENAME)
+        if i == -1:
+            continue
+        if x[i] == 'T':
+            base = one_tone_down(base)
+        else:
+            base = one_semitone_down(base)
 
-    print('Playing Cmaj 3 seconds, merged with E4 for the first second, merged with C4 in the third second.')
-    # Create Cmaj
-    cmaj = avg_waves(sine_wave(frequency=PianoNotes.C3.value), sine_wave(frequency=PianoNotes.E3.value),
-                     sine_wave(frequency=PianoNotes.G2.value))
-    cmaj_sample = create_samples((cmaj,), 44100 * 3)
-    # Create E
-    e = sine_wave(frequency=PianoNotes.E4.value)
-    e_sample = create_samples((e,), 44100)
-    # Create C sample
-    c = sine_wave(frequency=PianoNotes.C4.value)
-    c_sample = create_samples((c,), 44100)
-    # Prepend 2 seconds of blank sound to the C sample
-    chained = add_delay(c_sample, 1, 2)
-    # Merge them all together
-    merged = merge_samples((cmaj_sample, e_sample, chained), 1)
-    # Create WAV file and play
-    w = write_wave(tempfile.mktemp(), merged, 44100 * 2)
-    winsound.PlaySound(w, flags=winsound.SND_FILENAME)
+    # print('Playing Cmaj 3 seconds, merged with E4 for the first second, merged with C4 in the third second.')
+    # # Create Cmaj
+    # cmaj = avg_waves(sine_wave(frequency=PianoNotes.C3.value), sine_wave(frequency=PianoNotes.E3.value),
+    #                  sine_wave(frequency=PianoNotes.G2.value))
+    # cmaj_sample = create_samples((cmaj,), 44100 * 3)
+    # # Create E
+    # e = sine_wave(frequency=PianoNotes.E4.value)
+    # e_sample = create_samples((e,), 44100)
+    # # Create C sample
+    # c = sine_wave(frequency=PianoNotes.C4.value)
+    # c_sample = create_samples((c,), 44100)
+    # # Prepend 2 seconds of blank sound to the C sample
+    # chained = add_delay(c_sample, 1, 2)
+    # # Merge them all together
+    # merged = merge_samples((cmaj_sample, e_sample, chained), 1)
+    # # Create WAV file and play
+    # w = write_wave(tempfile.mktemp(), merged, 44100 * 2)
+    # winsound.PlaySound(w, flags=winsound.SND_FILENAME)
 
 
 if __name__ == '__main__':
