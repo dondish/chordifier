@@ -13,14 +13,19 @@ from pianokeyfreq import *
 import tempfile
 
 
+def play_freq(waves, secs):
+    wav = write_wave(tempfile.mktemp(), create_samples(waves, 44100 * secs), 44100 * secs)
+    winsound.PlaySound(wav, flags=winsound.SND_FILENAME)
+
+
 def main():
     # winsound.Beep(19950, 1000)
     # winsound.PlaySound(sine_wave(64, 1/440, 44100, 16), flags=winsound.SND_MEMORY)
     print('Main')
     sinewave = sine_wave()
     sinewave2 = sine_wave()
-    print("Sine wave:", list(itertools.islice(sinewave, 44100//440)))
-    print("Added waves:", list(itertools.islice(add_waves(sinewave, sinewave2), 44100//440)))
+    print("Sine wave:", list(itertools.islice(sinewave, 44100 // 440)))
+    print("Added waves:", list(itertools.islice(add_waves(sinewave, sinewave2), 44100 // 440)))
     print("Mono:", len([list(i) for i in create_samples((sinewave,), 44100)]))
     print("Stereo:", len([list(i) for i in create_samples((sinewave, sinewave), 44100)]))
     # wav = write_wave(tempfile.mktemp(), create_samples((sinewave,), 44100), 44100)
@@ -29,27 +34,30 @@ def main():
     # winsound.PlaySound(wav2, flags=winsound.SND_FILENAME)
 
     # Play the C scale, starting from C3
-    base = 130.8128
-    x = 'TTSTTTS'  # Major scale
-    for i in range(8):
-        wav = write_wave(tempfile.mktemp(), create_samples((sine_wave(0.25, base), sine_wave(0.25, base)), 44100), 44100)
-        winsound.PlaySound(wav, flags=winsound.SND_FILENAME)
-        if i == 7:
-            continue
-        if x[i] == 'T':
-            base = one_tone_up(base)
-        else:
-            base = one_semitone_up(base)
-    for i in range(6, -2, -1):
-        wav = write_wave(tempfile.mktemp(), create_samples((sine_wave(0.25, base), sine_wave(0.25, base)), 44100),
-                         44100)
-        winsound.PlaySound(wav, flags=winsound.SND_FILENAME)
-        if i == -1:
-            continue
-        if x[i] == 'T':
-            base = one_tone_down(base)
-        else:
-            base = one_semitone_down(base)
+    # base = 130.8128
+    # x = 'TTSTTTS'  # Major scale
+    # for i in range(8):
+    #     wav = write_wave(tempfile.mktemp(), create_samples((sine_wave(0.25, base), sine_wave(0.25, base)), 44100), 44100)
+    #     winsound.PlaySound(wav, flags=winsound.SND_FILENAME)
+    #     if i == 7:
+    #         continue
+    #     if x[i] == 'T':
+    #         base = one_tone_up(base)
+    #     else:
+    #         base = one_semitone_up(base)
+    # for i in range(6, -2, -1):
+    #     wav = write_wave(tempfile.mktemp(), create_samples((sine_wave(0.25, base), sine_wave(0.25, base)), 44100),
+    #                      44100)
+    #     winsound.PlaySound(wav, flags=winsound.SND_FILENAME)
+    #     if i == -1:
+    #         continue
+    #     if x[i] == 'T':
+    #         base = one_tone_down(base)
+    #     else:
+    #         base = one_semitone_down(base)
+    cmaj = avg_waves(sine_wave(frequency=PianoNotes.C3.value), sine_wave(frequency=PianoNotes.E3.value),
+                     sine_wave(frequency=PianoNotes.G2.value))
+    play_freq((cmaj,), 1)
 
 
 if __name__ == '__main__':

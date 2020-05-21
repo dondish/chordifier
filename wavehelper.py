@@ -3,13 +3,24 @@ import wave
 import itertools
 import struct
 
+# Heavily inspired by https://zach.se/generate-audio-with-python/
+
 def add_waves(*waves):
     """
-    Adds an indefinite amount of waves together.
+    Adds waves together.
     :param waves: an iterator of waves
     :return: a wave
     """
     return map(sum, zip(*waves))
+
+
+def avg_waves(*waves):
+    """
+    Create the average wave.
+    :param waves: an iterator of waves
+    :return: a wave
+    """
+    return map(lambda x: x / len(waves), add_waves(*waves))
 
 
 def sine_wave(amplitude=0.5, frequency=440., sample_rate=44100.):
