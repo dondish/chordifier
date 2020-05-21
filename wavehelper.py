@@ -3,7 +3,9 @@ import wave
 import itertools
 import struct
 
+
 # Heavily inspired by https://zach.se/generate-audio-with-python/
+
 
 def add_waves(*waves):
     """
@@ -32,7 +34,7 @@ def sine_wave(amplitude=0.5, frequency=440., sample_rate=44100.):
     :return: an infinite iterator of the sine wave
     """
     increment = (2 * math.pi) / (sample_rate / frequency)
-    return itertools.cycle(amplitude*math.sin(x*increment) for x in range(int(sample_rate / frequency)))
+    return itertools.cycle(amplitude * math.sin(x * increment) for x in range(int(sample_rate / frequency)))
 
 
 def create_samples(channels, nsamples=-1):
@@ -45,8 +47,59 @@ def create_samples(channels, nsamples=-1):
     return itertools.islice(zip(*channels), nsamples)
 
 
+def expand_channels(channel, nchannels):
+    """
+    Expand one channel to multiple
+    :param channel: the channel to expand
+    :param nchannels: the amount of channels
+    :return: the sample
+    """
+    return map(lambda x: (x for i in range(nchannels)), channel)
+
+
+def weighted_avg(*items):
+    print(items)
+    return sum(*items)
+
+
+def add_delay(sample, nchannels=2, seconds=1, sample_rate=44100):
+    """
+    Adds delay to the sample.
+    :param sample: the sample
+    :param nchannels: channel count
+    :param seconds: seconds of delay
+    :param sample_rate: sample rate
+    :return: a sample with delay
+    """
+    return chain_samples((itertools.islice(expand_channels(sine_wave(amplitude=0), nchannels), sample_rate * seconds),
+                          sample))
+
+
+def merge_samples(samples, nchannels):
+    """
+    Merges two samples
+    :param samples: the samples, must have the same sample rate and channel count
+    :param nchannels: the number of channels
+    :return: the merged sample
+    """
+    zipped = itertools.zip_longest(*samples, fillvalue=(0 for _ in range(nchannels)))
+    mapped = map(lambda x:
+                 (sum(itertools.islice(itertools.chain(*x), c, len(samples), nchannels)) for c in range(nchannels)),
+                 zipped)
+    return mapped
+
+
+def chain_samples(samples):
+    """
+    Chains two samples
+    :param samples: the samples, must have the same sample rate and channel count
+    :return: the merged sample
+    """
+    return itertools.chain(*samples)
+
+
 def grouper(n, iterable, fillvalue=None):
-    "grouper(3, 'ABCDEFG', 'x') --> ABC DEF Gxx"
+    """grouper(3, 'ABCDEFG', 'x') --> ABC DEF Gxx"""
     args = [iter(iterable)] * n
     return itertools.zip_longest(fillvalue=fillvalue, *args)
 
