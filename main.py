@@ -1,4 +1,3 @@
-import struct
 import sys
 
 if sys.platform != 'win32':
@@ -6,7 +5,6 @@ if sys.platform != 'win32':
     exit()
 
 import winsound
-import itertools
 from wavehelper import *
 from pianokeyfreq import *
 
