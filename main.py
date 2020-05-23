@@ -13,7 +13,7 @@ import tempfile
 
 
 def play_freq(waves, secs, file=tempfile.mktemp()):
-    wav = write_wave(file, create_samples(waves, 44100 * secs), 44100 * secs)
+    wav = write_wav(file, create_samples(waves, 44100 * secs), 44100 * secs)
     winsound.PlaySound(wav, flags=winsound.SND_FILENAME)
 
 
@@ -72,7 +72,7 @@ def main():
     # Merge them all together
     merged = merge_samples((cmaj_sample, e_sample, chained), 1)
     # Create WAV file and play
-    w = write_wave(tempfile.mktemp(), merged, 44100 * 2)
+    w = write_wav(tempfile.mktemp(), merged, 44100 * 2)
     winsound.PlaySound(w, flags=winsound.SND_FILENAME)
 
 

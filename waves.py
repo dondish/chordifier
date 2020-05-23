@@ -21,6 +21,16 @@ def avg_waves(*waves):
     return map(lambda x: x / len(waves), add_waves(*waves))
 
 
+def mul_wave(wave, scalar: float = 1.):
+    """
+    Multiply the wave by a scalar
+    :param wave: the wave
+    :param scalar: a scalar to multiply the wave with
+    :return:the new wave
+    """
+    return map(lambda x: x * scalar, wave)
+
+
 def sine_wave(amplitude=0.5, frequency=440., sample_rate=44100.):
     """
     Calculates a sine-wave

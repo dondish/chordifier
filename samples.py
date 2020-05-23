@@ -82,9 +82,9 @@ def grouper(n, iterable, fillvalue=None):
     return itertools.zip_longest(fillvalue=fillvalue, *args)
 
 
-def write_wave(file, samples, nframes=-1, nchannels=2, sampwidth=2, framerate=44100, bufsize=2048):
+def write_wav(file, samples, nframes=-1, nchannels=2, sampwidth=2, framerate=44100, bufsize=2048):
     """
-    Writes the samples to a wave file.
+    Writes the samples to a wav file.
     :param file: can be a filename, or a file object.
     :param samples: the samples
     :param nframes: the number of frames
