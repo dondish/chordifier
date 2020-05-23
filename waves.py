@@ -1,5 +1,6 @@
 import itertools
 import math
+import random
 
 
 def add_waves(*waves):
@@ -44,7 +45,7 @@ def square_wave(amplitude=0.5, frequency=440., sample_rate=44100.):
                sine_wave(amplitude, frequency, sample_rate))
 
 
-def sawtooth_wave(amplitude=0.5, frequency=440., sample_rate=44100.):
+def sawtooth_wave(amplitude=0.0125, frequency=440., sample_rate=44100.):
     """
     Calculates a sawtooth-wave
     :param amplitude: the amplitude of the wave
@@ -68,3 +69,17 @@ def triangle_wave(amplitude=0.5, frequency=440., sample_rate=44100.):
         4 * amplitude * (x / (sample_rate / frequency) - 0.25 if x / (sample_rate / frequency) <= 1 / 2
                          else 0.75 - x / (sample_rate / frequency))
         for x in range(int(sample_rate / frequency)))
+
+
+def white_noise(amplitude=0.0125):
+    """
+    Calculates a white-noise
+    :param amplitude: the amplitude of the noise
+    :return: an infinite iterator of the white-noise
+    """
+
+    def __white_noise():
+        while True:
+            yield random.uniform(-1, 1) * amplitude
+
+    return __white_noise()
