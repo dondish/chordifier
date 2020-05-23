@@ -1,4 +1,3 @@
-import itertools
 import struct
 import wave
 
@@ -28,11 +27,6 @@ def expand_channels(channel, nchannels):
     return map(lambda x: (x for i in range(nchannels)), channel)
 
 
-def weighted_avg(*items):
-    print(items)
-    return sum(*items)
-
-
 def add_delay(sample, nchannels=2, seconds=1, sample_rate=44100):
     """
     Adds delay to the sample.
@@ -46,16 +40,29 @@ def add_delay(sample, nchannels=2, seconds=1, sample_rate=44100):
                           sample))
 
 
-def merge_samples(samples, nchannels):
+def __weighted_avg(samples, weight_table, n):
+    """
+    Averages by weight
+    :param samples: the samples to average
+    :param weight_table: the weight table, if None it's a normal average
+    :param n: the number of samples
+    :return: the average
+    """
+    return sum(x * (weight_table[i] if weight_table is not None else 1 / n) for i, x in enumerate(samples))
+
+
+def merge_samples(samples, nchannels, weight_table=None):
     """
     Merges two samples
     :param samples: the samples, must have the same sample rate and channel count
     :param nchannels: the number of channels
+    :param weight_table: adds a specific weight to each sample when merging the sound
     :return: the merged sample
     """
     zipped = itertools.zip_longest(*samples, fillvalue=(0 for _ in range(nchannels)))
     mapped = map(lambda x:
-                 (sum(itertools.islice(itertools.chain(*x), c, len(samples), nchannels)) for c in range(nchannels)),
+                 (__weighted_avg(itertools.islice(itertools.chain(*x), c, len(samples), nchannels), weight_table,
+                                 len(samples)) for c in range(nchannels)),
                  zipped)
     return mapped
 
